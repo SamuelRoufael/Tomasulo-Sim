@@ -1,5 +1,7 @@
 package components;
 
+import java.util.ArrayList;
+
 import Tomasulo.Tomasulo;
 
 public class FPMultipliers {
@@ -13,6 +15,8 @@ public class FPMultipliers {
 		for (ReservationStation instruction : stations) {
 			if (instruction.canExec()) {
 				instruction.decCycles();
+				if (instruction.getCycles() == 0)
+					instruction.getInstruction().setExecEndCycle(Tomasulo.currentCycle);
 			}
 		}
 	}
@@ -28,5 +32,39 @@ public class FPMultipliers {
 	
 	public void addReservation(int index,ReservationStation reservationStation) {
 		stations[index] = reservationStation;
+	}
+	
+	public void clearReservation(int index) {
+		stations[index] = null;
+	}
+	
+	public ArrayList<ReservationStation> readyToWrite(){
+		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
+		
+		for (ReservationStation instruction : stations) {
+			if (instruction.getCycles() == -1)
+				list.add(instruction);
+		}	
+		return list;
+	}
+	
+	public ArrayList<ReservationStation> dependentOne(String nameRS){
+		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
+
+		for (ReservationStation instruction : stations) {
+			if (instruction.getQj() == nameRS || instruction.getQk() == nameRS)
+				list.add(instruction);
+		}	
+		return list;
+	}
+	
+	public ArrayList<ReservationStation> dependentOnOnly(String nameRS){
+		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
+
+		for (ReservationStation instruction : stations) {
+			if ((instruction.getQj() == nameRS && instruction.getQk() == null) || (instruction.getQj() == null && instruction.getQk() == nameRS))
+				list.add(instruction);
+		}	
+		return list;
 	}
 }
