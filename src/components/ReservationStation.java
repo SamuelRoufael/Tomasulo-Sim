@@ -108,6 +108,10 @@ public class ReservationStation {
 		cycles--;
 	}
 	
+	public int getCycles() {
+		return cycles;
+	}
+
 	// returns name of the reservation station (M1,MM2)
 	public String getName() {
 		return name;
@@ -115,12 +119,12 @@ public class ReservationStation {
 	
 	// checks if the instruction is ready to execute
 	public boolean canExec() {
-		return ( ((opCode=="LW") ||(qj==null && qk==null) || (qj==null && opCode=="SW")) && cycles > 0 && Tomasulo.currentCycle != instruction.getIssueCycle());
+		return ( ((opCode=="LW") ||(qj==null && qk==null) || (qj==null && opCode=="SW")) && cycles >= 0 && Tomasulo.currentCycle != instruction.getIssueCycle());
 	}
 	
 	// checks if the instructor is ready to write
 	public boolean isReadyWrite() {
-		return (cycles==0);
+		return (cycles==-1);
 	}
 
 	@Override
