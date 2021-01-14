@@ -28,9 +28,9 @@ public class Instruction {
 	@Override
 	public String toString() {
 		if (opCode == "LW" || opCode == "SW") {
-			return opCode + " " + rt + " " + immediate + "($" + rs + ")";
+			return opCode + " " + rt + " " + immediate + "($" + rs + ")" + " " + issueCycle + " " + execStartCycle + " " + execEndCycle + " " + WriteCycle;
 		}
-		return opCode + " " + rd + " " + rs + " " + rt;
+		return opCode + " " + rd + " " + rs + " " + rt + " " + issueCycle + " " + execStartCycle + " " + execEndCycle + " " + WriteCycle;
 	}
 
 	public String getOpCode() {
