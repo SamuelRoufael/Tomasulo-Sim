@@ -11,10 +11,20 @@ public class FPMultipliers {
 		this.stations = new ReservationStation [Tomasulo.mulReserveSpace];
 	}
 	
+	public boolean isEmpty() {
+		for (ReservationStation instruction : stations) {
+			if (instruction != null)
+				return false;
+		}
+		return true;
+	}
+	
 	public void run() {
 		for (ReservationStation instruction : stations) {
-			if (instruction.canExec()) {
+			if (instruction != null && instruction.canExec()) {
 				instruction.decCycles();
+				if (instruction.getInstruction().getExecStartCycle() == 0)
+					instruction.getInstruction().setExecStartCycle(Tomasulo.currentCycle);
 				if (instruction.getCycles() == 0)
 					instruction.getInstruction().setExecEndCycle(Tomasulo.currentCycle);
 			}
@@ -34,35 +44,41 @@ public class FPMultipliers {
 		stations[index] = reservationStation;
 	}
 	
-	public void clearReservation(int index) {
-		stations[index] = null;
+	public void clearReservation(ReservationStation instruction) {
+		for (int i = 0 ; i < stations.length ; i++) {
+			if (stations[i] != null && stations[i].equals(instruction)) {
+				stations[i] = null;
+			}
+				
+		}
 	}
 	
 	public ArrayList<ReservationStation> readyToWrite(){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 		
 		for (ReservationStation instruction : stations) {
-			if (instruction.getCycles() == -1)
+			if (instruction != null && instruction.getCycles() == -1)
 				list.add(instruction);
 		}	
 		return list;
 	}
 	
-	public ArrayList<ReservationStation> dependentOne(String nameRS){
+	public ArrayList<ReservationStation> dependentOn(String nameRS){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 
 		for (ReservationStation instruction : stations) {
-			if (instruction.getQj() == nameRS || instruction.getQk() == nameRS)
+			if (instruction != null && (( instruction.getQj() != null && instruction.getQj().equals(nameRS)) || (instruction.getQk() != null && instruction.getQk().equals(nameRS))))
 				list.add(instruction);
 		}	
 		return list;
 	}
 	
-	public ArrayList<ReservationStation> dependentOnOnly(String nameRS){
+	public ArrayList<ReservationStation> dependentOnOnlyOne(String nameRS){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 
 		for (ReservationStation instruction : stations) {
-			if ((instruction.getQj() == nameRS && instruction.getQk() == null) || (instruction.getQj() == null && instruction.getQk() == nameRS))
+			if ((instruction != null && instruction.getQj() != null && instruction.getQj().equals(nameRS) && instruction.getQk() == null) 
+					|| (instruction != null && instruction.getQj() == null && instruction.getQk() != null && instruction.getQk().equals(nameRS)))
 				list.add(instruction);
 		}	
 		return list;
