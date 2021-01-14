@@ -119,7 +119,7 @@ public class ReservationStation {
 	
 	// checks if the instruction is ready to execute
 	public boolean canExec() {
-		return ( ((opCode=="LW") ||(qj==null && qk==null) || (qj==null && opCode=="SW")) && cycles >= 0 && Tomasulo.currentCycle != instruction.getIssueCycle());
+		return ( ((opCode=="LW") || (qj==null && qk==null) || (qj==null && opCode=="SW")) && cycles >= 0 && Tomasulo.currentCycle != instruction.getIssueCycle());
 	}
 	
 	// checks if the instructor is ready to write
@@ -129,9 +129,9 @@ public class ReservationStation {
 
 	@Override
 	public String toString() {
-		String output = name + " " + busy + " " ;
+		String output = name + " " +opCode + " " + busy  +" " ;
 		if (opCode=="ADD" || opCode == "SUB" || opCode == "MUL" || opCode == "DIV") {
-			output += opCode + " " + vj + " " + vk + " " + qj + " " + qk; 
+			output += vj + " " + vk + " " + qj + " " + qk; 
 		}
 		else if (opCode == "LW") {
 			output += address; 
