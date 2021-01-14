@@ -13,10 +13,24 @@ public class Memory {
 		storeBuffers = new ReservationStation [Tomasulo.storeReserveSpace];
 	}
 	
+	public boolean isEmpty() {
+		for (ReservationStation instruction : loadBuffers) {
+			if (instruction != null)
+				return false;
+		}
+		for (ReservationStation instruction : storeBuffers) {
+			if (instruction != null)
+				return false;
+		}
+		return true;
+	}
+	
 	public void runLoad() {
 		for (ReservationStation instruction : loadBuffers) {
-			if (instruction.canExec()) {
+			if (instruction != null && instruction.canExec()) {
 				instruction.decCycles();
+				if (instruction.getInstruction().getExecStartCycle() == 0)
+					instruction.getInstruction().setExecStartCycle(Tomasulo.currentCycle);
 				if (instruction.getCycles() == 0)
 					instruction.getInstruction().setExecEndCycle(Tomasulo.currentCycle);
 			}
@@ -25,8 +39,10 @@ public class Memory {
 	
 	public void runStore() {
 		for (ReservationStation instruction : storeBuffers) {
-			if (instruction.canExec()) {
+			if (instruction != null && instruction.canExec()) {
 				instruction.decCycles();
+				if (instruction.getInstruction().getExecStartCycle() == 0)
+					instruction.getInstruction().setExecStartCycle(Tomasulo.currentCycle);
 				if (instruction.getCycles() == 0)
 					instruction.getInstruction().setExecEndCycle(Tomasulo.currentCycle);
 			}
@@ -59,19 +75,27 @@ public class Memory {
 		storeBuffers[index] = reservationStation;
 	}
 	
-	public void clearReservationLoad(int index) {
-		loadBuffers[index] = null;
+	public void clearReservationload(ReservationStation instruction) {
+		for (int i = 0 ; i < loadBuffers.length ; i++) {
+			if (loadBuffers[i] != null && loadBuffers[i].equals(instruction)) {
+				loadBuffers[i] = null;
+			}
+		}
 	}
 	
-	public void clearReservationStore(int index) {
-		storeBuffers[index] = null;
+	public void clearReservationstore(ReservationStation instruction) {
+		for (int i = 0 ; i < storeBuffers.length ; i++) {
+			if (storeBuffers[i] != null && storeBuffers[i].equals(instruction)) {
+				storeBuffers[i] = null;
+			}
+		}
 	}
 	
 	public ArrayList<ReservationStation> loadReadyToWrite(){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 		
 		for (ReservationStation instruction : loadBuffers) {
-			if (instruction.getCycles() == -1)
+			if (instruction != null && instruction.getCycles() == -1)
 				list.add(instruction);
 		}	
 		return list;
@@ -80,18 +104,18 @@ public class Memory {
 	public ArrayList<ReservationStation> storeReadyToWrite(){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 		
-		for (ReservationStation instruction : loadBuffers) {
-			if (instruction.getCycles() == -1)
+		for (ReservationStation instruction : storeBuffers) {
+			if (instruction != null && instruction.getCycles() == -1)
 				list.add(instruction);
 		}	
 		return list;
 	}
 	
-	public ArrayList<ReservationStation> storeDependentOne(String nameRS){
+	public ArrayList<ReservationStation> storeDependentOn(String nameRS){
 		ArrayList<ReservationStation> list = new ArrayList<ReservationStation>();
 
 		for (ReservationStation instruction : storeBuffers) {
-			if (instruction.getQj() == nameRS)
+			if (instruction != null && instruction.getQj() != null && instruction.getQj().equals(nameRS))
 				list.add(instruction);
 		}	
 		return list;
