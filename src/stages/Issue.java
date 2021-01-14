@@ -14,21 +14,21 @@ public class Issue {
 	private int cycles = 0;
 
 	public void run() {
-		System.out.println("----------Issue Stage----------");
 		if (!Tomasulo.instructionQueue.isEmpty()) {
+			
 			instruction = Tomasulo.instructionQueue.fetchInstruction();
-			if (instruction.getOpCode() == "ADD" || instruction.getOpCode() == "SUB") {
+			if (instruction.getOpCode().equals("ADD") || instruction.getOpCode().equals("SUB")) {
 				freeSpaceIndex = Tomasulo.fpAdders.containsFreeStation();
 				if (freeSpaceIndex != -1) {
 					String rsDependency = registerDependency(instruction.getRs());
 					String rtDependency = registerDependency(instruction.getRt());
 
-					if (rsDependency == "") 
+					if (rsDependency == null) 
 						vj = instruction.getRs();
 					else 
 						qj = rsDependency;
 
-					if (rtDependency == "")
+					if (rtDependency == null)
 						vk = instruction.getRt();
 					else
 						qk = rtDependency;
@@ -45,27 +45,28 @@ public class Issue {
 					instruction.setIssueCycle(Tomasulo.currentCycle);
 				}
 			}
-			else if (instruction.getOpCode() == "MUL" || instruction.getOpCode() == "SUB") {
+			else if (instruction.getOpCode().equals("MUL") || instruction.getOpCode().equals("DIV")) {
 				freeSpaceIndex = Tomasulo.fpMultipliers.containsFreeStation();
 				if (freeSpaceIndex != -1) {
 					String rsDependency = registerDependency(instruction.getRs());
 					String rtDependency = registerDependency(instruction.getRt());
-
-					if (rsDependency == "") 
+					
+					
+					if (rsDependency == null) 
 						vj = instruction.getRs();
 					else 
 						qj = rsDependency;
 
-					if (rtDependency == "")
+					if (rtDependency == null)
 						vk = instruction.getRt();
 					else
 						qk = rtDependency;
 
-					if (instruction.getOpCode() == "MUL")
+					if (instruction.getOpCode().equals("MUL"))
 						cycles = Tomasulo.mulCycles;
 					else
 						cycles = Tomasulo.divCycles;
-
+					
 					ReservationStation reservationStation = new ReservationStation(true, "M"+freeSpaceIndex, instruction.getOpCode(), vj, vk, qj, qk, cycles, instruction);
 					Tomasulo.fpMultipliers.addReservation(freeSpaceIndex, reservationStation);
 					Tomasulo.instructionQueue.incCounter();
@@ -73,12 +74,12 @@ public class Issue {
 					instruction.setIssueCycle(Tomasulo.currentCycle);
 				}
 			}
-			else if (instruction.getOpCode() == "SW") {
+			else if (instruction.getOpCode().equals("SW")) {
 				freeSpaceIndex = Tomasulo.memory.storeContainsFreeStation();
 				if (freeSpaceIndex != -1) {
 					String rtDependency = registerDependency(instruction.getRt());
 
-					if (rtDependency == "")
+					if (rtDependency == null)
 						vj = instruction.getRt();
 					else
 						qj = rtDependency;
@@ -99,7 +100,7 @@ public class Issue {
 							Tomasulo.loadCycles, instruction);
 					Tomasulo.memory.addReservationLoad(freeSpaceIndex, reservationStation);
 					Tomasulo.instructionQueue.incCounter();
-					Tomasulo.fpRegisters.reserveAt(Integer.parseInt(instruction.getRd().substring(1, instruction.getRt().length())), "L"+freeSpaceIndex);
+					Tomasulo.fpRegisters.reserveAt(Integer.parseInt(instruction.getRt().substring(1, instruction.getRt().length())), "L"+freeSpaceIndex);
 					instruction.setIssueCycle(Tomasulo.currentCycle);
 				}
 			}
