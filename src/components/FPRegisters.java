@@ -12,7 +12,7 @@ public class FPRegisters {
 	}
 	
 	public void clearAt(int index) {
-		registers[index] = ""; 
+		registers[index] = null; 
 	}
 	
 	public void reserveAt(int index,String reservationName) {
