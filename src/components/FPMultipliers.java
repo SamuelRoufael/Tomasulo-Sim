@@ -83,4 +83,13 @@ public class FPMultipliers {
 		}	
 		return list;
 	}
+	
+	public void print() {
+		System.out.println("---------------- Multipliers Reservation Stations ---------------");
+		System.out.println("name " + "op " + "Busy " + "VJ " + "VK " + "QJ " + "QK");
+		for (ReservationStation instruction : stations) {
+			if (instruction != null)
+				System.out.println(instruction);
+		}
+	}
 }
