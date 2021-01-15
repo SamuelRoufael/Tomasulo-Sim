@@ -17,5 +17,15 @@ public class FPRegisters {
 	
 	public void reserveAt(int index,String reservationName) {
 		registers[index] = reservationName;
-	}	
+	}
+	
+	public void print() {
+		System.out.println("---------------- FP Registers---------------");
+		for (int i = 0 ; i < registers.length ; i++) {
+			if (registers[i] == null)
+				System.out.println("F" +i + " : " );
+			else 
+				System.out.println("F" +i + " : " + registers[i]);
+		}
+	}
 }
