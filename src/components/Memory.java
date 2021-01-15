@@ -120,4 +120,22 @@ public class Memory {
 		}	
 		return list;
 	}
+	
+	public void printLoad() {
+		System.out.println("---------------- Load Reservation Stations ---------------");
+		System.out.println("name " + "op " + "Busy " + "Address");
+		for (ReservationStation instruction : loadBuffers) {
+			if (instruction != null)
+				System.out.println(instruction);
+		}
+	}
+	
+	public void printStore() {
+		System.out.println("---------------- Store Reservation Stations ---------------");
+		System.out.println("name " + "op " + "Busy " + "VJ " + "QJ " + "Address");
+		for (ReservationStation instruction : storeBuffers) {
+			if (instruction != null)
+				System.out.println(instruction);
+		}
+	}
 }
