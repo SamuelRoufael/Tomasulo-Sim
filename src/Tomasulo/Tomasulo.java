@@ -37,37 +37,26 @@ public class Tomasulo {
 	public static void run() {
 		while(!Tomasulo.instructionQueue.Done()) {
 			currentCycle++;
+			System.out.println("--------------------------------Cycle " + currentCycle + " --------------------------------");
 			issueStage.run();
 			executeStage.run();
 			writeStage.run();
+			Tomasulo.fpAdders.print();
+			Tomasulo.fpMultipliers.print();
+			Tomasulo.memory.printLoad();
+			Tomasulo.memory.printStore();
+			Tomasulo.fpRegisters.print();
+			System.out.println();
 		}
+		System.out.println("------------------- FINAL TRACING TABLE TABLE ---------------");
 		instructionQueue.print();
 	}
 	
 	public static void main(String[] args) {
 		// Test Case 1
-//		addReserveSpace =3;
-//		mulReserveSpace =2;
-//		loadReserveSpace =3;
-//		storeReserveSpace = 0;
-//		fpRegisters = new FPRegisters();
-//		fpAdders = new FPAdders();
-//		fpMultipliers = new FPMultipliers();
-//		memory = new Memory();
-//		issueStage = new Issue();
-//		executeStage = new Exec();
-//		writeStage = new Write();
-//		addCycles = 2;
-//		subCycles = 2;
-//		mulCycles = 10;
-//		divCycles = 40;
-//		loadCycles = 2;
-//		storeCycles = 0;
-		
-//		Test Case 2 
 		addReserveSpace =3;
 		mulReserveSpace =2;
-		loadReserveSpace =0;
+		loadReserveSpace =3;
 		storeReserveSpace = 0;
 		fpRegisters = new FPRegisters();
 		fpAdders = new FPAdders();
@@ -76,16 +65,36 @@ public class Tomasulo {
 		issueStage = new Issue();
 		executeStage = new Exec();
 		writeStage = new Write();
-		addCycles = 4;
-		subCycles = 0;
-		mulCycles = 6;
-		divCycles = 9;
-		loadCycles = 0;
+		addCycles = 2;
+		subCycles = 2;
+		mulCycles = 10;
+		divCycles = 40;
+		loadCycles = 2;
 		storeCycles = 0;
+		
+//		Test Case 2 
+//		addReserveSpace =3;
+//		mulReserveSpace =2;
+//		loadReserveSpace =0;
+//		storeReserveSpace = 0;
+//		fpRegisters = new FPRegisters();
+//		fpAdders = new FPAdders();
+//		fpMultipliers = new FPMultipliers();
+//		memory = new Memory();
+//		issueStage = new Issue();
+//		executeStage = new Exec();
+//		writeStage = new Write();
+//		addCycles = 4;
+//		subCycles = 0;
+//		mulCycles = 6;
+//		divCycles = 9;
+//		loadCycles = 0;
+//		storeCycles = 0;
 		
 		instructionQueue = new InstructionQueue();
 		Tomasulo.run();
 	}
+	
 	
 	public static void printArray(ArrayList<ReservationStation> list) {
 		for (ReservationStation i : list) {
