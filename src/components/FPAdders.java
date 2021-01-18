@@ -12,6 +12,7 @@ public class FPAdders {
 	}
 
 	public void run() {
+		
 		for (ReservationStation instruction : stations) {
 			if (instruction != null && instruction.canExec()) {
 				instruction.decCycles();
